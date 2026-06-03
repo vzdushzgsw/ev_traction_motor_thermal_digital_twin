@@ -1,4 +1,4 @@
-# EV Traction Motor Thermal Digital Twin
+## EV Traction Motor Thermal Digital Twin
 
 ### Data Generation
 Wanted to move beyond CAD and explore real-time thermodynamic simulation. This repository acts as a physical "Digital Twin" of an EV traction motor. 
@@ -9,3 +9,7 @@ It uses fundamental heat transfer equations to simulate stator copper losses and
 
 --------------
 The data generated in this repository is directly consumed by my [Traction Motor Predictive ML Model](https://github.com/vzdushzgsw/traction-motor-thermal-predictive-model) to train a vehicle control unit override system.
+
+### Integration
+This Digital Twin generates the telemetry data used by my other project: 
+[Traction Motor Predictive ML Model](https://github.com/vzdushzgsw/traction-motor-thermal-predictive-model)
