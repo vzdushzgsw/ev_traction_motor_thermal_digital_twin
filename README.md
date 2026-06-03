@@ -8,8 +8,6 @@ It uses fundamental heat transfer equations to simulate stator copper losses and
 **The Output:** This Python script generates synthetic CSV telemetry data based on real physics (`synthetic_motor_data.csv`).
 
 --------------
-The data generated in this repository is directly consumed by my [Traction Motor Predictive ML Model](https://github.com/vzdushzgsw/traction-motor-thermal-predictive-model) to train a vehicle control unit override system.
-
 ### Integration
-This Digital Twin generates the telemetry data used by my other project: 
-[Traction Motor Predictive ML Model](https://github.com/vzdushzgsw/traction-motor-thermal-predictive-model)
+
+The data generated in this repository is directly consumed by my [Traction Motor Predictive ML Model](https://github.com/vzdushzgsw/traction-motor-thermal-predictive-model) to train a vehicle control unit override system.
