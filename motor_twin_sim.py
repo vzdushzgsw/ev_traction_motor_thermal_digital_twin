@@ -29,32 +29,39 @@ class TractionMotorDigitalTwin:
 
 # SIMULATION RUNTIME & DATA EXPORT
 if __name__ == "__main__":
-    my_motor_twin = TractionMotorDigitalTwin(baseline_temp=40.0)
-    print("\nBEGINNING TRANSIENT CYCLE SIMULATION")
-    
+    print("\nBEGINNING MULTI-SCENARIO SIMULATION")    
     telemetry_clipboard = []
-    
-    # 10-second driving cycle: (Amps, Coolant Flow L/min)
-    driving_cycle = [
-        (150, 6.0), (250, 6.0), (380, 4.0), (420, 3.5), (450, 3.0),
-        (450, 3.0), (350, 5.0), (200, 8.0), (100, 10.0), (80, 12.0)
-    ]
-    
-    for second, (amps, flow) in enumerate(driving_cycle, start=1):
-        my_motor_twin.update_thermal_state(amps, flow, dt_seconds=1.0)
-        status = my_motor_twin.get_health_telemetry()
-        
+    #define 3 different test scenarios: (Name, Amps, Coolant Flow)
+    scenarios = [
+        ("Slow Cruise", 100, 10.0),
+        ("Normal Commute", 250, 6.0),
+        ("Overload", 550, 2.0)
+    ]    
+    for scenario_name, base_amps, base_flow in scenarios:
+        print(f"\n--- Running Scenario: {scenario_name} ---")
+
+        #creating new motor (resetting temp to 40) for each test!
+        my_motor_twin =  TractionMotorDigitalTwin(baseline_temp=40.0)
+        for second in range(1,31):
+            my_motor_twin.update_thermal_state(base_amps, base_flow, dt_seconds=1.0)
+            status = my_motor_twin.get_health_telemetry() 
+            
         # If temp > 140C, trigger the critical boundary (1)
         is_critical = 1 if status['Stator_Temp_C'] > 140.0 else 0
         
+        #save data to master list        
         telemetry_clipboard.append({
-            'Stator_Current_Amps': amps,
-            'Coolant_Flow_Lmin': flow,
+            'Scenario': scenario_name,
+            'Stator_Current_Amps': base_amps,
+            'Coolant_Flow_Lmin': base_flow,
+            'Stator_Temp_C': status['Stator_Temp_C'],
             'Turtle_Trigger': is_critical
         })
+        #Print update to the screen
         print(f"Time: {second}s | Temp: {status['Stator_Temp_C']}°C | Critical Status: {is_critical}")
-        time.sleep(0.2)
-        
+        #time.sleep(0.05) #speeding up sleep timer
+
+    #once all scenarios are done, generates the master file        
     print("\nSimulation Complete. Generating synthetic data file...")
     powertrain_telemetry_df = pd.DataFrame(telemetry_clipboard)
     powertrain_telemetry_df.to_csv('synthetic_motor_data.csv', index=False)
